@@ -1,0 +1,30 @@
+{# Horizon: a glowing planet arc with a few "node" dots on its rim (echoing the ring on the logo).
+   Defined once here and used at the bottom of the hero and above the footer. #}
+{% macro horizon(extra='', uid='a') %}<div class="horizon {{ extra }}" aria-hidden="true">
+  <svg viewBox="0 0 1200 260" preserveAspectRatio="xMidYMax meet">
+    <defs>
+      <radialGradient id="arcGlow-{{ uid }}"><stop offset="0" stop-color="rgba(240,220,138,0.42)"/><stop offset="0.5" stop-color="rgba(168,116,46,0.15)"/><stop offset="1" stop-color="rgba(168,116,46,0)"/></radialGradient>
+      <linearGradient id="arcRim-{{ uid }}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
+        <stop offset="0" stop-color="#2BC4C4"/><stop offset="0.3" stop-color="#5B63E0"/><stop offset="0.5" stop-color="#F0DC8A"/><stop offset="0.7" stop-color="#5B63E0"/><stop offset="1" stop-color="#2BC4C4"/>
+      </linearGradient>
+      <filter id="arcBlur-{{ uid }}" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="11"/></filter>
+    </defs>
+    <ellipse cx="600" cy="165" rx="580" ry="150" fill="url(#arcGlow-{{ uid }})"/>
+    <circle cx="600" cy="1950" r="1800" fill="none" stroke="url(#arcRim-{{ uid }})" stroke-width="18" filter="url(#arcBlur-{{ uid }})" opacity="0.6"/>
+    <circle cx="600" cy="1950" r="1800" fill="#0B0B0F"/>
+    <circle cx="600" cy="1950" r="1800" fill="none" stroke="url(#arcRim-{{ uid }})" stroke-width="3.5"/>
+    <line x1="130" y1="212.4" x2="290" y2="176.9" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <line x1="290" y1="176.9" x2="450" y2="156.3" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <line x1="450" y1="156.3" x2="600" y2="150.0" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <line x1="600" y1="150.0" x2="750" y2="156.3" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <line x1="750" y1="156.3" x2="910" y2="176.9" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <line x1="910" y1="176.9" x2="1070" y2="212.4" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+    <g class="pulse-node" style="animation-delay:0.0s"><circle cx="130" cy="212.4" r="9" fill="#0B0B0F" stroke="#2BC4C4" stroke-width="3.5"/><circle cx="130" cy="212.4" r="3.5" fill="#2BC4C4"/></g>
+    <g class="pulse-node" style="animation-delay:0.35s"><circle cx="290" cy="176.9" r="9" fill="#0B0B0F" stroke="#5B63E0" stroke-width="3.5"/><circle cx="290" cy="176.9" r="3.5" fill="#5B63E0"/></g>
+    <g class="pulse-node" style="animation-delay:0.7s"><circle cx="450" cy="156.3" r="9" fill="#0B0B0F" stroke="#2BC4C4" stroke-width="3.5"/><circle cx="450" cy="156.3" r="3.5" fill="#2BC4C4"/></g>
+    <g class="pulse-node" style="animation-delay:1.05s"><circle cx="600" cy="150.0" r="13" fill="#0B0B0F" stroke="#F0DC8A" stroke-width="3.5"/><circle cx="600" cy="150.0" r="5" fill="#F0DC8A"/></g>
+    <g class="pulse-node" style="animation-delay:1.4s"><circle cx="750" cy="156.3" r="9" fill="#0B0B0F" stroke="#5B63E0" stroke-width="3.5"/><circle cx="750" cy="156.3" r="3.5" fill="#5B63E0"/></g>
+    <g class="pulse-node" style="animation-delay:1.75s"><circle cx="910" cy="176.9" r="9" fill="#0B0B0F" stroke="#2BC4C4" stroke-width="3.5"/><circle cx="910" cy="176.9" r="3.5" fill="#2BC4C4"/></g>
+    <g class="pulse-node" style="animation-delay:2.1s"><circle cx="1070" cy="212.4" r="9" fill="#0B0B0F" stroke="#5B63E0" stroke-width="3.5"/><circle cx="1070" cy="212.4" r="3.5" fill="#5B63E0"/></g>
+  </svg>
+</div>{% endmacro %}

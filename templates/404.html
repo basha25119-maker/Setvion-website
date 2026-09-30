@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found | Setvion AI Solutions</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  <meta name="theme-color" content="#0B0B0F">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <section class="not-found">
+    <img class="not-found-bg" src="{{ url_for('static', filename='logo-bridge.png') }}" alt="">
+    <div class="not-found-content">
+      <h1 class="gold">This page took a wrong turn.</h1>
+      <p class="lead">The bridge doesn't reach here yet.</p>
+      <a href="{{ url_for('home') }}" class="button">Back to homepage</a>
+      <p class="fine-print">
+        Looking for something specific? Email us at
+        <a href="mailto:amruthkumar206@gmail.com">amruthkumar206@gmail.com</a> and we'll point you the right way.
+      </p>
+    </div>
+  </section>
+</body>
+</html>

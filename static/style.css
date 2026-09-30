@@ -1,0 +1,313 @@
+/* Setvion AI Solutions - gold and black from the logo, teal and indigo from the bridge.
+   Change the colours here and the whole site follows. */
+:root {
+  --bg: #0B0B0F;
+  --panel: #14141B;
+  --line: #2C2C38;
+  --text: #E4E1D8;
+  --muted: #A9A79F;
+  --teal: #2BC4C4;
+  --indigo: #5B63E0;
+  --gold-light: #F0DC8A;
+  --gold-dark: #A8742E;
+  --gold: linear-gradient(90deg, #A8742E, #F0DC8A 50%, #A8742E);
+  --bridge: linear-gradient(180deg, #2BC4C4, #5B63E0);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  color: var(--text);
+  font: 1.1rem/1.6 "Source Sans 3", system-ui, sans-serif;
+  background-color: var(--bg);
+}
+
+h1, h2, h3 { font-family: "Sora", system-ui, sans-serif; line-height: 1.2; color: #fff; }
+a { color: var(--gold-light); }
+:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+/* The gold text from the logo */
+.gold { background: var(--gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+.wrap { max-width: 1050px; margin: 0 auto; padding: 0 1.25rem; }
+.narrow { max-width: 680px; }
+
+/* ----- About: text only, same left edge as the other headings ----- */
+#about p { max-width: 42em; }
+
+/* ----- Top menu ----- */
+.topbar { position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 0.6rem 1.25rem; background: rgba(11, 11, 15, 0.92); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; font: 700 1rem "Sora", sans-serif; letter-spacing: 0.06em; }
+.topbar nav a { color: var(--text); text-decoration: none; margin-left: 1.5rem; }
+.topbar nav a:hover { color: var(--gold-light); }
+.topbar nav .nav-cta { border: 1px solid var(--gold-dark); padding: 0.35rem 0.9rem; border-radius: 6px; color: var(--gold-light); }
+#menu-toggle { display: none; }
+.menu-button { display: none; border: 1px solid var(--gold-dark); color: var(--gold-light); padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; }
+
+/* ----- Hero ----- */
+.hero {
+  position: relative; padding: 4rem 0 calc(4rem + min(9vw, 120px));
+  background:
+    linear-gradient(180deg, rgba(91, 99, 224, 0.14), rgba(91, 99, 224, 0.04) 70%, transparent),
+    radial-gradient(ellipse 620px 290px at 75% 40%, rgba(91, 99, 224, 0.25), transparent 100%);
+}
+.hero .wrap { position: relative; z-index: 2; }
+
+/* ----- Horizon: a glowing planet arc with node dots (bottom of hero, above footer) ----- */
+.horizon { position: relative; overflow: hidden; pointer-events: none; }
+.horizon svg { display: block; width: 100%; height: auto; }
+.hero .horizon { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; }
+.horizon-end { height: clamp(150px, 19vw, 250px);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 45%); mask-image: linear-gradient(180deg, transparent 0, #000 45%); }
+.horizon-end svg { position: absolute; left: 0; bottom: 0; }
+.pulse-node { animation: nodePulse 3s ease-in-out infinite; }
+@keyframes nodePulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pulse-node { animation: none; } }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; align-items: center; }
+.hero h1 { font-size: clamp(2.1rem, 5.5vw, 3.5rem); margin: 0 0 1rem; }
+.lead { font-size: 1.25rem; max-width: 32em; color: var(--muted); margin: 0 0 2rem; }
+
+.button { display: inline-block; border: 0; cursor: pointer; background: var(--gold); color: #1A1206; font: 700 1.05rem "Source Sans 3", sans-serif; padding: 0.8rem 1.7rem; border-radius: 8px; text-decoration: none; }
+.button:hover { filter: brightness(1.12); }
+
+/* ----- 3D scene: three rings orbit the logo, the logo floats and tilts ----- */
+.scene { position: relative; width: 100%; max-width: 420px; aspect-ratio: 1; margin: 0 auto; perspective: 900px; }
+.float { position: absolute; inset: 0; display: grid; place-items: center; animation: float 6s ease-in-out infinite; }
+.tilt { width: 82%; transition: transform 0.2s ease-out; filter: drop-shadow(0 18px 28px rgba(91, 99, 224, 0.4)); }
+.ring { position: absolute; inset: 6%; border: 1px solid currentColor; border-radius: 50%; opacity: 0.7; animation: spin 14s linear infinite; }
+.ring::before { content: ""; position: absolute; top: -6px; left: calc(50% - 6px); width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
+.r1 { color: var(--teal);   --tilt: rotateX(72deg); }
+.r2 { color: var(--indigo); --tilt: rotateY(72deg); animation-duration: 18s; animation-direction: reverse; }
+.r3 { color: var(--gold-light); --tilt: rotateX(58deg) rotateY(38deg); inset: -3%; animation-duration: 22s; }
+@keyframes spin { from { transform: var(--tilt) rotateZ(0deg); } to { transform: var(--tilt) rotateZ(360deg); } }
+@keyframes float { 50% { transform: translateY(-14px); } }
+
+/* ----- Sections ----- */
+.section { padding: 4rem 0; }
+/* A thin line between sections, so each one reads as its own block while scrolling */
+.section + .section { border-top: 1px solid var(--line); }
+/* A very faint tint on alternating sections, for a bit more separation beyond the line */
+.panel { background: rgba(255, 255, 255, 0.02); }
+.section h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); margin: 0 0 0.6rem; }
+.intro { margin: 0 0 2rem; color: var(--muted); }
+
+.services { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.service { background: var(--panel); padding: 1.4rem 1.4rem 1.4rem 1.6rem; border-left: 3px solid var(--teal); border-image: var(--bridge) 1; transition: transform 0.3s; }
+.service:hover { transform: perspective(700px) rotateX(4deg) rotateY(-6deg); }
+.svc-head { display: flex; align-items: center; gap: 0.7rem; margin: 0 0 0.4rem; }
+.svc-icon { width: 34px; height: 34px; flex: 0 0 auto; }
+.service h3 { margin: 0; font-size: 1.2rem; }
+.service p { margin: 0; color: var(--muted); }
+
+/* AI and automation: gear turns continuously */
+.gear-teeth { transform-origin: 20px 20px; animation: gearTurn 6s linear infinite; }
+@keyframes gearTurn { to { transform: rotate(360deg); } }
+
+/* Websites and apps: cursor clicks the button once it scrolls into view */
+.svc-cursor { opacity: 0; }
+.svc-button { stroke: var(--teal); }
+.service.in-view .svc-cursor { animation: cursorClick 1.4s ease forwards 0.2s; }
+.service.in-view .svc-button { animation: buttonLight 1.4s ease forwards 0.2s; }
+@keyframes cursorClick { 0% { opacity: 0; transform: translate(4px, -6px); } 40% { opacity: 1; transform: translate(-2px, 3px); } 100% { opacity: 1; transform: translate(-2px, 3px); } }
+@keyframes buttonLight { 0%, 35% { stroke: var(--teal); } 55% { stroke: var(--gold-light); } 100% { stroke: var(--teal); } }
+
+/* Data and reporting: bars grow upward once they scroll into view */
+.bar { transform-box: fill-box; transform-origin: bottom; transform: scaleY(0); }
+.service.in-view .bar-1 { animation: growBar 0.5s ease forwards 0.1s; }
+.service.in-view .bar-2 { animation: growBar 0.5s ease forwards 0.3s; }
+.service.in-view .bar-3 { animation: growBar 0.5s ease forwards 0.5s; }
+@keyframes growBar { to { transform: scaleY(1); } }
+
+/* Cloud and integration: connection dots pulse gently, on a loop */
+.cloud-dot { animation: dotPulse 2.4s ease-in-out infinite; }
+.cloud-dot.d2 { animation-delay: 0.3s; }
+.cloud-dot.d3 { animation-delay: 0.6s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gear-teeth, .cloud-dot, .svc-cursor, .svc-button, .bar { animation: none !important; }
+  .bar { transform: none; }
+}
+
+.steps { padding-left: 1.4rem; max-width: 40em; }
+.steps li { margin-bottom: 1rem; padding-left: 0.4rem; }
+.steps li::marker { color: var(--gold-light); font-weight: 700; }
+
+/* ----- Why choose Setvion: flip cards ----- */
+.flip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.flip-card { perspective: 1400px; cursor: pointer; height: 140px; }
+.flip-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+.flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+.flip-card.flipped .flip-inner,
+.flip-card:hover .flip-inner,
+.flip-card:focus-visible .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 1.2rem; border-radius: 18px;
+}
+.flip-front { background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); flex-direction: column; gap: 0.8rem; }
+.flip-front::before { content: ""; width: 40px; height: 3px; border-radius: 2px; background: var(--bridge); }
+.flip-front h3 { margin: 0; font-size: 1.15rem; }
+.flip-back { background: var(--panel); box-shadow: inset 0 0 0 1px rgba(240, 220, 138, 0.4); transform: rotateY(180deg); }
+.flip-back p { margin: 0; color: var(--gold-light); font-size: 1.05rem; }
+
+/* ----- How we work: four cards side by side ----- */
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 1rem; }
+.flow-step { text-align: center; }
+.flow-icon { width: 80px; height: 80px; margin: 0 auto 1rem; display: block; }
+.flow-step h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+.flow-step p { margin: 0; color: var(--muted); font-size: 1rem; }
+
+/* Card 1: dots pulse gently, always on */
+.dot { animation: dotPulse 2.4s ease-in-out infinite; }
+.flow-step:nth-child(2) .dot:nth-child(2) { animation-delay: 0.3s; }
+.flow-step:nth-child(2) .dot:nth-child(3) { animation-delay: 0.6s; }
+@keyframes dotPulse { 0%, 100% { opacity: 0.5; r: 4; } 50% { opacity: 1; r: 5; } }
+
+/* Card 2: checkmark draws itself in once it scrolls into view */
+.check { stroke-dasharray: 40; stroke-dashoffset: 40; }
+.flow-step.in-view .check { animation: draw 0.6s ease forwards 0.2s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* Card 3: bridge cable draws left to right once it scrolls into view */
+.cable { stroke-dasharray: 90; stroke-dashoffset: 90; }
+.flow-step.in-view .cable { animation: draw2 1s ease forwards 0.2s; }
+@keyframes draw2 { to { stroke-dashoffset: 0; } }
+
+/* Card 4: a light travels across the finished bridge (always on, it's a finished/live bridge) */
+.pulse { filter: drop-shadow(0 0 4px var(--teal)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot, .check, .cable, .pulse animateMotion { animation: none !important; }
+}
+
+/* ----- Logo strip: continuous scrolling line of placeholder logos ----- */
+.logo-strip { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.logo-track { display: flex; gap: 1.2rem; width: max-content; animation: scrollLogos 18s linear infinite; }
+.logo-track:hover { animation-play-state: paused; }
+@keyframes scrollLogos { to { transform: translateX(-50%); } }
+.logo-slot {
+  flex: 0 0 180px; height: 80px;
+  display: grid; place-items: center;
+  border: 1px dashed var(--line); border-radius: 8px;
+  color: var(--muted); font-size: 0.9rem; text-align: center; padding: 0.5rem;
+}
+
+/* ----- Testimonials: one at a time, with arrows and dots to move manually ----- */
+.testimonial-slider { display: flex; align-items: center; gap: 1rem; max-width: 640px; margin: 0 auto; }
+.testimonials { position: relative; flex: 1; min-height: 140px; }
+.testimonial {
+  position: absolute; inset: 0; display: none;
+  flex-direction: column; justify-content: center; text-align: center;
+}
+.testimonial.active { display: flex; }
+.testimonial p { font-size: 1.2rem; }
+.testimonial .who { font-size: 0.95rem; color: var(--muted); }
+.t-arrow {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--line); background: transparent; color: var(--text);
+  font-size: 1.4rem; line-height: 1; cursor: pointer;
+}
+.t-arrow:hover { border-color: var(--gold-light); color: var(--gold-light); }
+.dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+.dots .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); border: 0; padding: 0; cursor: pointer; }
+.dots .dot.active { background: var(--gold-light); }
+
+/* ----- Contact ----- */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; }
+.details { font-size: 1.15rem; line-height: 2; }
+form label { display: block; font-weight: 600; margin: 1.1rem 0 0.3rem; color: #fff; }
+form label:first-child { margin-top: 0; }
+form input, form textarea { width: 100%; padding: 0.75rem; font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+form input:focus, form textarea:focus { border-color: var(--gold-light); outline: none; }
+form .button { margin-top: 1.5rem; }
+.notice { padding: 0.9rem 1rem; border-radius: 8px; font-weight: 600; margin: 0 0 1rem; }
+.notice.success { background: #12301F; color: #7FE0A8; }
+.notice.error { background: #3A1712; color: #FF9A88; }
+
+footer { border-top: 1px solid var(--line); padding: 1.8rem 0; color: var(--muted); font-size: 0.95rem; }
+.footer-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
+.footer-name { margin: 0; font: 700 1rem "Sora", sans-serif; letter-spacing: 0.06em; }
+.footer-tagline { margin: 0.2rem 0 0.6rem; }
+.copyright { margin: 0; font-size: 0.9rem; }
+.footer-contact { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; text-align: right; }
+.footer-contact a { color: var(--muted); text-decoration: none; }
+.footer-contact a:hover { color: var(--gold-light); }
+
+/* ----- Custom 404 page ----- */
+.not-found { position: relative; min-height: 100vh; display: grid; place-items: center; overflow: hidden; background: var(--bg); text-align: center; padding: 2rem; }
+.not-found-bg {
+  position: absolute; top: 50%; left: 50%; width: min(700px, 90vw);
+  transform: translate(-50%, -50%); opacity: 0.12; pointer-events: none;
+}
+.not-found-content { position: relative; max-width: 32em; }
+.not-found-content h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 0 0 0.6rem; }
+.not-found-content .lead { margin: 0 0 1.8rem; }
+.not-found-content .fine-print { margin-top: 1.8rem; color: var(--muted); font-size: 0.95rem; }
+
+/* ----- Service tag pills (under each service description) ----- */
+.tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.tag { border: 1px solid var(--line); border-radius: 999px; padding: 0.25rem 0.75rem; font-size: 0.8rem; color: var(--muted); }
+
+/* ----- About page ----- */
+.about-hero { padding-bottom: calc(3rem + min(9vw, 120px)); }
+.about-hero-row { display: flex; align-items: center; justify-content: space-between; gap: 2.5rem; flex-wrap: wrap; }
+.about-tagline { font: 700 1.4rem "Sora", sans-serif; margin: 0 0 0.5rem; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; }
+h1.about-heading { margin: 0.6rem 0 0; font: 600 1.2rem "Sora", sans-serif; color: var(--gold-light); letter-spacing: 0.02em; }
+.about-hero-logo { width: clamp(220px, 30vw, 360px); height: auto; flex: 0 0 auto; }
+
+/* A thin line between consecutive sections, so each one reads as its own space
+   without needing a background tint or a repeated label. */
+.section + .section { border-top: 1px solid var(--line); }
+
+/* "Read more about us" link under the short homepage About text */
+.text-link { display: inline-block; margin-top: 0.5rem; color: var(--gold-light); text-decoration: none; font-weight: 600; }
+.text-link:hover { text-decoration: underline; }
+
+.work-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.work-card { display: grid; grid-template-columns: 160px 1fr; gap: 1.5rem; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 1.5rem; }
+.work-logo {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  height: 90px; border: 1px dashed var(--line); border-radius: 8px;
+  color: var(--muted); font-size: 0.85rem; padding: 0.5rem;
+}
+.work-client { margin: 0; font: 700 1rem "Sora", sans-serif; color: #fff; }
+.work-founder { margin: 0.15rem 0 0.6rem; color: var(--muted); font-size: 0.85rem; font-style: italic; }
+.work-body h3 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+.work-body p { margin: 0 0 0.5rem; color: var(--muted); }
+.work-points { margin: 0.75rem 0 0; padding-left: 1.2rem; color: var(--muted); }
+.work-points li { margin-bottom: 0.4rem; }
+
+/* ----- Phone layout ----- */
+@media (max-width: 760px) {
+  .menu-button { display: block; }
+  .topbar nav { display: none; width: 100%; padding-top: 0.6rem; }
+  #menu-toggle:checked ~ nav { display: block; }
+  .topbar nav a { display: block; margin: 0; padding: 0.7rem 0; }
+  .topbar nav .nav-cta { border: 0; padding: 0.7rem 0; }
+  .brand { font-size: 0.85rem; }
+  .work-card { grid-template-columns: 1fr; }
+  .work-logo { height: 70px; }
+  .about-hero-row { flex-direction: column; align-items: flex-start; }
+  .hero { padding: 2.5rem 0 calc(2.5rem + 20vw); }
+  .horizon svg { width: 190%; max-width: none; position: relative; left: -45%; }
+  .horizon-end { height: 150px; }
+  .horizon-end svg { position: absolute; bottom: 0; left: -45%; }
+  .hero-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .flow { grid-template-columns: 1fr; }
+  .testimonial-slider { gap: 0.5rem; }
+  .t-arrow { width: 34px; height: 34px; }
+  .footer-row { flex-direction: column; }
+  .footer-contact { align-items: flex-start; text-align: left; }
+  .scene { max-width: 300px; }
+  .services { grid-template-columns: 1fr; }
+  .flip-grid { grid-template-columns: 1fr; }
+  .section { padding: 3rem 0; }
+  .button { width: 100%; text-align: center; }
+}
+
+/* People who switch off animation in their phone settings get a still page */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
