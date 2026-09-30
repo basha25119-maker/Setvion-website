@@ -1,0 +1,31 @@
+Setvion AI Solutions
+building bridges with modern technology
+
+Setu → connection / bridge
+-vion → modern technology / vision-like sound
+
+
+http://127.0.0.1:5000 
+http://127.0.0.1:5000/xyz for 404 error
+
+For adding testimonials- This works no matter how many testimonials you add later — you'd just copy one more <div class="testimonial"> block and add one more <span class="dot"></span>
+For client logos: replace each <div class="logo-slot">Your logo here</div> with <img src="{{ url_for('static', filename='client1.png') }}" alt="Client name">, after adding the logo file to your static folder
+
+
+Before you launch
+
+Privacy policy – Since your form collects names and emails and you're in the UK, GDPR expects a short privacy notice saying what you collect and why. I can draft one in plain English.
+A real domain and hosting – Right now the site only runs on your own computer. You'll want a domain (like setvion.ai or setvionsolutions.com) and a hosting service that can run Flask, such as PythonAnywhere, Render, or Railway. I can walk you through this when you're ready.
+HTTPS (the padlock icon) – Most hosting services listed above give you this automatically, but it's worth confirming before launch, especially since you have a contact form.
+
+Worth adding soon
+
+Real content – Testimonials, past projects, or case studies (even one) build far more trust than the current generic service descriptions. If you don't have client work yet, a couple of "example projects" you've done for yourself count too.
+Social links or LinkedIn – A footer link to LinkedIn or a company social page reassures visitors you're a real, findable business.
+Basic SEO tags – A few extra lines in the page's <head> (Open Graph tags) control how your site looks when shared on WhatsApp, LinkedIn or Facebook — right now it would show no preview image.
+Simple analytics – Something like Plausible or Google Analytics, so you can see how many people visit and whether the contact form gets used.
+
+Nice to have, not urgent
+
+A proper favicon in more sizes (for browser tabs and phone home-screen icons).
+Spam protection on the contact form (a simple honeypot field works well and needs no extra service).
