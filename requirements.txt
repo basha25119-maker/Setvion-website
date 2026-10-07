@@ -1,0 +1,4 @@
+Flask>=3.0,<4
+Flask-Compress>=1.15
+python-dotenv>=1.0
+gunicorn>=22.0

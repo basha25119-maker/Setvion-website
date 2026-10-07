@@ -16,6 +16,7 @@ railway.json        Tells Railway to use the Dockerfile + health check
 # terminal 1 - API
 python -m venv .venv && .venv\Scripts\activate
 pip install -r requirements.txt
+copy .env.example .env             # then put your RESEND_API_KEY etc. in .env
 python app.py                       # http://127.0.0.1:5000
 
 # terminal 2 - site with hot reload (proxies /api to Flask)

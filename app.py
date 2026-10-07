@@ -19,6 +19,12 @@ from email.message import EmailMessage
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_compress import Compress
+
+try:  # local development: read variables from a .env file (Railway uses real env vars instead)
+    from dotenv import load_dotenv
+    load_dotenv(override=False)
+except ImportError:
+    pass
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
