@@ -37,7 +37,7 @@ Production-style check: `cd frontend && npm run build`, then `python app.py` and
 | Variable | Purpose |
 |---|---|
 | `RESEND_API_KEY` | **Recommended.** Sends contact emails over HTTPS (resend.com, free tier). Verify your domain there and set `RESEND_FROM`, e.g. `Setvion <hello@yourdomain.com>`. |
-| `RESEND_FROM` | Sender address for the above. |
+| `RESEND_FROM` | Sender address. `onboarding@resend.dev` only delivers to your own Resend account email. **To also email the visitor a confirmation, verify your domain in Resend** and use e.g. `Setvion <hello@yourdomain.com>`. |
 | `CONTACT_EMAIL` | Where messages go. Defaults to the address in `app.py`. |
 | `SETVION_EMAIL_PASSWORD` | Gmail app password (SMTP fallback). Railway blocks outbound SMTP on Free/Hobby plans, so use Resend unless you are on Pro. |
 | `MESSAGES_FILE` | Optional CSV backup path. Attach a Railway Volume at `/data` and set `/data/messages.csv` to keep it across deploys. |

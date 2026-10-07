@@ -5,6 +5,7 @@
 # Production:  gunicorn app:app         (see Dockerfile / README.md)
 
 import csv
+import html
 import json
 import logging
 import os
@@ -20,14 +21,24 @@ from email.message import EmailMessage
 from flask import Flask, jsonify, request, send_from_directory
 from flask_compress import Compress
 
-try:  # local development: read variables from a .env file (Railway uses real env vars instead)
-    from dotenv import load_dotenv
-    load_dotenv(override=False)
-except ImportError:
-    pass
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+def _load_env(path):
+    """Tiny .env reader for local development (Railway uses real environment variables)."""
+    try:
+        with open(path, encoding="utf-8-sig") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, value = line.partition("=")
+                os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+    except OSError:
+        pass
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+_load_env(os.path.join(BASE_DIR, ".env"))
 DIST_DIR = os.path.join(BASE_DIR, "frontend", "dist")
 
 # Messages are sent here. Override with the CONTACT_EMAIL environment variable.
@@ -45,6 +56,9 @@ PAGES = {"/", "/about", "/services"}  # routes the React app knows; anything els
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("setvion")
+
+log.info("Email provider: %s | notifications go to %s",
+         "Resend" if RESEND_API_KEY else ("Gmail SMTP" if EMAIL_PASSWORD else "NONE (set RESEND_API_KEY)"), CONTACT_EMAIL)
 
 app = Flask(__name__, static_folder=None)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)  # Railway sits behind a proxy
@@ -105,15 +119,17 @@ def save_message(name, email, message):
         log.warning("Could not write %s: %s", MESSAGES_FILE, err)
 
 
-def deliver(name, email, message):
-    """Email the message. Runs in a background thread so the visitor isn't kept waiting."""
-    subject = "New website message from " + name.replace("\r", " ").replace("\n", " ")
-    body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+def _send(to, subject, text, html=None, reply_to=None):
+    """Send one email via Resend (preferred) or Gmail SMTP. Returns True on success, never raises."""
     try:
         if RESEND_API_KEY:
-            payload = json.dumps({"from": RESEND_FROM, "to": [CONTACT_EMAIL], "reply_to": email, "subject": subject, "text": body}).encode()
+            data = {"from": RESEND_FROM, "to": [to], "subject": subject, "text": text}
+            if html:
+                data["html"] = html
+            if reply_to:
+                data["reply_to"] = reply_to
             req = urllib.request.Request(
-                "https://api.resend.com/emails", data=payload, method="POST",
+                "https://api.resend.com/emails", data=json.dumps(data).encode(), method="POST",
                 headers={
                     "Authorization": f"Bearer {RESEND_API_KEY}",
                     "Content-Type": "application/json",
@@ -121,20 +137,64 @@ def deliver(name, email, message):
                 },
             )
             urllib.request.urlopen(req, timeout=15).read()
-            log.info("Email sent via Resend to %s", CONTACT_EMAIL)
         elif EMAIL_PASSWORD:
             mail = EmailMessage()
-            mail["Subject"], mail["From"], mail["To"], mail["Reply-To"] = subject, CONTACT_EMAIL, CONTACT_EMAIL, email
-            mail.set_content(body)
+            mail["Subject"], mail["From"], mail["To"] = subject, CONTACT_EMAIL, to
+            if reply_to:
+                mail["Reply-To"] = reply_to
+            mail.set_content(text)
+            if html:
+                mail.add_alternative(html, subtype="html")
             with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as server:
                 server.login(CONTACT_EMAIL, EMAIL_PASSWORD)
                 server.send_message(mail)
         else:
-            log.info("No email provider configured; message only logged.")
+            log.warning("No email provider configured (set RESEND_API_KEY); email to %s not sent.", to)
+            return False
+        log.info("Email sent to %s (%s)", to, subject)
+        return True
     except urllib.error.HTTPError as err:  # e.g. unverified domain, bad key: Resend explains why in the body
-        log.error("Resend rejected the email (%s): %s", err.code, err.read().decode("utf-8", "replace")[:300])
+        log.error("Resend rejected the email to %s (%s): %s", to, err.code, err.read().decode("utf-8", "replace")[:400])
     except Exception as err:  # the message is still in the logs / CSV
-        log.error("Could not send email: %s", err)
+        log.error("Could not send email to %s: %s", to, err)
+    return False
+
+
+def deliver(name, email, message):
+    """Email the team the enquiry, then send the visitor a confirmation. Runs in a background thread."""
+    clean = name.replace("\r", " ").replace("\n", " ")
+    esc_name, esc_email = html.escape(clean), html.escape(email)
+    esc_msg = html.escape(message).replace("\n", "<br>")
+
+    # 1) To you: the enquiry. Pressing Reply answers the visitor.
+    _send(
+        CONTACT_EMAIL,
+        f"New website message from {clean}",
+        f"Name: {clean}\nEmail: {email}\n\nMessage:\n{message}",
+        html=(f"<p><strong>Name:</strong> {esc_name}<br><strong>Email:</strong> {esc_email}</p>"
+              f"<p><strong>Message:</strong></p><p>{esc_msg}</p>"),
+        reply_to=email,
+    )
+
+    # 2) To the visitor: confirmation with a copy of what they sent.
+    first = esc_name.split(" ")[0] or "there"
+    _send(
+        email,
+        "We've received your message | Setvion AI Solutions",
+        (f"Hi {clean.split(' ')[0] or 'there'},\n\n"
+         "Thank you for getting in touch with Setvion AI Solutions. We have your message and will reply "
+         "within one working day.\n\nYour message:\n" + message +
+         "\n\nBest regards,\nThe Setvion team\n" + CONTACT_EMAIL),
+        html=(f"<div style='font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#1a1a1f;line-height:1.6'>"
+              f"<h2 style='margin:0 0 4px'>Thanks, {first}.</h2>"
+              "<p style='color:#555;margin-top:0'>We have your message and will reply within one working day.</p>"
+              f"<div style='border-left:3px solid #c08a3c;padding:4px 16px;margin:20px 0;background:#faf7f0'>"
+              f"<p style='margin:8px 0;color:#555;font-size:13px'>Your message</p><p style='margin:8px 0'>{esc_msg}</p></div>"
+              "<p>Best regards,<br><strong>The Setvion team</strong><br>"
+              f"<a href='mailto:{html.escape(CONTACT_EMAIL)}'>{html.escape(CONTACT_EMAIL)}</a></p>"
+              "<p style='color:#999;font-size:12px'>Setvion AI Solutions &middot; Building bridges with modern technology</p></div>"),
+        reply_to=CONTACT_EMAIL,
+    )
 
 
 @app.post("/api/contact")
