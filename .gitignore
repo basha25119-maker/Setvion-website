@@ -1,0 +1,7 @@
+myenv/
+.venv/
+__pycache__/
+node_modules/
+frontend/dist/
+messages.csv
+.env

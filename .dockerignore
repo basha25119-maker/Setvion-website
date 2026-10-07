@@ -1,0 +1,9 @@
+.git
+myenv
+**/node_modules
+frontend/dist
+messages.csv
+continuous_tint_sketch.html
+templates
+static
+*.md
