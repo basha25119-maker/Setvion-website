@@ -3,7 +3,7 @@
 export const COMPANY = {
   name: "Setvion AI Solutions",
   tagline: "Building bridges with modern technology",
-  email: "amruthkumar206@gmail.com",
+  email: "yaseenbasha.dudekula@gmail.com",
   phone: "+44 7771 488177",
   phoneLabel: "07771 488177",
   linkedin: "", // e.g. "https://www.linkedin.com/company/setvion" - shows in the footer when set

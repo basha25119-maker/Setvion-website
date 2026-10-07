@@ -5,7 +5,6 @@
 # Production:  gunicorn app:app         (see Dockerfile / README.md)
 
 import csv
-import html
 import json
 import logging
 import os
@@ -20,6 +19,8 @@ from email.message import EmailMessage
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_compress import Compress
+
+from emails import team_email, visitor_email
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -42,10 +43,12 @@ _load_env(os.path.join(BASE_DIR, ".env"))
 DIST_DIR = os.path.join(BASE_DIR, "frontend", "dist")
 
 # Messages are sent here. Override with the CONTACT_EMAIL environment variable.
-CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "amruthkumar206@gmail.com")
+CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "yaseenbasha.dudekula@gmail.com")
 # Option A (recommended on Railway): Resend HTTPS API.
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
-RESEND_FROM = os.environ.get("RESEND_FROM", "Setvion Website <onboarding@resend.dev>")
+RESEND_FROM = os.environ.get("RESEND_FROM", "Setvion <onboarding@resend.dev>")
+# Public address of the site (used for the logo and button in emails), e.g. https://www.setvion.com
+SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 # Option B: Gmail app password over SMTP (Railway blocks SMTP on Free/Hobby plans).
 EMAIL_PASSWORD = os.environ.get("SETVION_EMAIL_PASSWORD")
 # Backup copy of every message. Railway's disk is wiped on redeploy unless you
@@ -162,39 +165,15 @@ def _send(to, subject, text, html=None, reply_to=None):
 
 def deliver(name, email, message):
     """Email the team the enquiry, then send the visitor a confirmation. Runs in a background thread."""
-    clean = name.replace("\r", " ").replace("\n", " ")
-    esc_name, esc_email = html.escape(clean), html.escape(email)
-    esc_msg = html.escape(message).replace("\n", "<br>")
+    clean = " ".join(name.split())  # no newlines in names/subjects
 
-    # 1) To you: the enquiry. Pressing Reply answers the visitor.
-    _send(
-        CONTACT_EMAIL,
-        f"New website message from {clean}",
-        f"Name: {clean}\nEmail: {email}\n\nMessage:\n{message}",
-        html=(f"<p><strong>Name:</strong> {esc_name}<br><strong>Email:</strong> {esc_email}</p>"
-              f"<p><strong>Message:</strong></p><p>{esc_msg}</p>"),
-        reply_to=email,
-    )
+    subject, text, page = team_email(clean, email, message, SITE_URL, CONTACT_EMAIL)
+    _send(CONTACT_EMAIL, subject, text, html=page, reply_to=email)  # Reply answers the visitor
 
-    # 2) To the visitor: confirmation with a copy of what they sent.
-    first = esc_name.split(" ")[0] or "there"
-    _send(
-        email,
-        "We've received your message | Setvion AI Solutions",
-        (f"Hi {clean.split(' ')[0] or 'there'},\n\n"
-         "Thank you for getting in touch with Setvion AI Solutions. We have your message and will reply "
-         "within one working day.\n\nYour message:\n" + message +
-         "\n\nBest regards,\nThe Setvion team\n" + CONTACT_EMAIL),
-        html=(f"<div style='font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#1a1a1f;line-height:1.6'>"
-              f"<h2 style='margin:0 0 4px'>Thanks, {first}.</h2>"
-              "<p style='color:#555;margin-top:0'>We have your message and will reply within one working day.</p>"
-              f"<div style='border-left:3px solid #c08a3c;padding:4px 16px;margin:20px 0;background:#faf7f0'>"
-              f"<p style='margin:8px 0;color:#555;font-size:13px'>Your message</p><p style='margin:8px 0'>{esc_msg}</p></div>"
-              "<p>Best regards,<br><strong>The Setvion team</strong><br>"
-              f"<a href='mailto:{html.escape(CONTACT_EMAIL)}'>{html.escape(CONTACT_EMAIL)}</a></p>"
-              "<p style='color:#999;font-size:12px'>Setvion AI Solutions &middot; Building bridges with modern technology</p></div>"),
-        reply_to=CONTACT_EMAIL,
-    )
+    subject, text, page = visitor_email(clean, message, SITE_URL, CONTACT_EMAIL)
+    if not _send(email, subject, text, html=page, reply_to=CONTACT_EMAIL) and "resend.dev" in RESEND_FROM:
+        log.warning("Visitor confirmation not sent. RESEND_FROM is the Resend test sender, which can only email "
+                    "your own Resend account address. Verify your domain in Resend and set RESEND_FROM to fix this.")
 
 
 @app.post("/api/contact")
