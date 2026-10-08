@@ -67,6 +67,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .topbar-in { width: min(1160px, 100% - 48px); margin-inline: auto; height: 72px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; align-items: center; gap: 12px; font: 700 1rem var(--head); letter-spacing: 0.2em; color: #fff; }
 .brand span { background: var(--gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brand-name { display: inline-flex; flex-direction: column; line-height: 1.15; font-size: 1.05rem; }
+.brand-name small { font: 500 0.6rem var(--body); letter-spacing: 0.3em; text-transform: none; -webkit-text-fill-color: #b9b8c2; color: #b9b8c2; margin-top: 3px; }
 .topbar nav { display: flex; align-items: center; gap: 34px; }
 .topbar nav a:not(.btn) { color: var(--muted); font-size: 0.95rem; font-weight: 500; position: relative; transition: color 0.2s; }
 .topbar nav a:not(.btn):hover, .topbar nav a.active { color: #fff; }

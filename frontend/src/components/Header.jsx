@@ -19,8 +19,8 @@ export default function Header() {
     <header className={`topbar ${scrolled || open ? "solid" : ""}`}>
       <div className="topbar-in">
         <Link to="/" className="brand" aria-label={`${COMPANY.name} home`}>
-          <img src="/logo-bridge.png" alt="" width="44" height="18" />
-          <span>SETVION</span>
+          <img src="/logo-bridge.png" alt="" width="52" height="21" />
+          <span className="brand-name">SETVION<small>AI Solutions</small></span>
         </Link>
         <button
           className="menu-btn"

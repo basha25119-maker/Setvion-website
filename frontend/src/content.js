@@ -1,7 +1,7 @@
 // All site copy lives here. Edit this file to change text; no component code needed.
 
 export const COMPANY = {
-  name: "Setvion AI Solutions",
+  name: "SETVION AI Solutions",
   tagline: "Building bridges with modern technology",
   email: "yaseenbasha.dudekula@gmail.com",
   phone: "+44 7771 488177",

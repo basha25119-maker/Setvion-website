@@ -1,9 +1,10 @@
-# Setvion AI Solutions - one small Flask service that serves the React build
+# SETVION AI Solutions - one small Flask service that serves the React build
 # (frontend/dist) and the contact-form API.
 #
 # Local dev:   python app.py            (API on :5000)  +  cd frontend && npm run dev
 # Production:  gunicorn app:app         (see Dockerfile / README.md)
 
+import base64
 import csv
 import json
 import logging
@@ -20,7 +21,7 @@ from email.message import EmailMessage
 from flask import Flask, jsonify, request, send_from_directory
 from flask_compress import Compress
 
-from emails import team_email, visitor_email
+from emails import LOGO_CID, team_email, visitor_email
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -46,7 +47,7 @@ DIST_DIR = os.path.join(BASE_DIR, "frontend", "dist")
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "yaseenbasha.dudekula@gmail.com")
 # Option A (recommended on Railway): Resend HTTPS API.
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
-RESEND_FROM = os.environ.get("RESEND_FROM", "Setvion <onboarding@resend.dev>")
+RESEND_FROM = os.environ.get("RESEND_FROM", "SETVION AI Solutions <onboarding@resend.dev>")
 # Public address of the site (used for the logo and button in emails), e.g. https://www.setvion.com
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 # Option B: Gmail app password over SMTP (Railway blocks SMTP on Free/Hobby plans).
@@ -122,6 +123,17 @@ def save_message(name, email, message):
         log.warning("Could not write %s: %s", MESSAGES_FILE, err)
 
 
+def _logo_bytes():
+    """The small email logo, from the built site (production) or the source folder (local dev)."""
+    for folder in (os.path.join(DIST_DIR), os.path.join(BASE_DIR, "frontend", "public")):
+        try:
+            with open(os.path.join(folder, "logo-email.png"), "rb") as f:
+                return f.read()
+        except OSError:
+            continue
+    return None
+
+
 def _send(to, subject, text, html=None, reply_to=None):
     """Send one email via Resend (preferred) or Gmail SMTP. Returns True on success, never raises."""
     try:
@@ -131,6 +143,12 @@ def _send(to, subject, text, html=None, reply_to=None):
                 data["html"] = html
             if reply_to:
                 data["reply_to"] = reply_to
+            logo = _logo_bytes() if html else None
+            if logo:  # inline image referenced as cid:setvion-logo in the HTML
+                data["attachments"] = [{
+                    "filename": "setvion-logo.png", "content": base64.b64encode(logo).decode(),
+                    "content_type": "image/png", "content_id": LOGO_CID,
+                }]
             req = urllib.request.Request(
                 "https://api.resend.com/emails", data=json.dumps(data).encode(), method="POST",
                 headers={
@@ -148,6 +166,9 @@ def _send(to, subject, text, html=None, reply_to=None):
             mail.set_content(text)
             if html:
                 mail.add_alternative(html, subtype="html")
+                logo = _logo_bytes()
+                if logo:
+                    mail.get_payload()[1].add_related(logo, "image", "png", cid=f"<{LOGO_CID}>")
             with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as server:
                 server.login(CONTACT_EMAIL, EMAIL_PASSWORD)
                 server.send_message(mail)

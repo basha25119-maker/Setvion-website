@@ -1,4 +1,4 @@
-# Setvion AI Solutions website
+# SETVION AI Solutions website
 
 One small service: **React (Vite)** front end, served by **Flask** (which also handles the contact form).
 Production image is a two-stage Docker build (Node builds the site, a slim Python image serves it).
@@ -36,8 +36,8 @@ Production-style check: `cd frontend && npm run build`, then `python app.py` and
 
 | Variable | Purpose |
 |---|---|
-| `RESEND_API_KEY` | **Recommended.** Sends contact emails over HTTPS (resend.com, free tier). Verify your domain there and set `RESEND_FROM`, e.g. `Setvion <hello@yourdomain.com>`. |
-| `RESEND_FROM` | Sender address. `onboarding@resend.dev` only delivers to your own Resend account email. **To also email the visitor a confirmation, verify your domain in Resend** and use e.g. `Setvion <hello@yourdomain.com>`. |
+| `RESEND_API_KEY` | **Recommended.** Sends contact emails over HTTPS (resend.com, free tier). Verify your domain there and set `RESEND_FROM`, e.g. `SETVION AI Solutions <hello@yourdomain.com>`. |
+| `RESEND_FROM` | Sender address. `onboarding@resend.dev` only delivers to your own Resend account email. **To also email the visitor a confirmation, verify your domain in Resend** and use e.g. `SETVION AI Solutions <hello@yourdomain.com>`. |
 | `CONTACT_EMAIL` | Where messages go. Defaults to the address in `app.py`. |
 | `SITE_URL` | Your live address, e.g. `https://www.yourdomain.com`. Adds the logo and a "Visit our website" button to emails. |
 | `SETVION_EMAIL_PASSWORD` | Gmail app password (SMTP fallback). Railway blocks outbound SMTP on Free/Hobby plans, so use Resend unless you are on Pro. |

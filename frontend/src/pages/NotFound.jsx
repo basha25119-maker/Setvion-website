@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { usePageMeta } from "../hooks.js";
 
 export default function NotFound() {
-  usePageMeta("Page not found | Setvion AI Solutions");
+  usePageMeta("Page not found | SETVION AI Solutions");
   return (
     <section className="notfound">
       <div className="wrap">

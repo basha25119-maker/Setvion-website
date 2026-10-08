@@ -13,6 +13,7 @@ INK = "#0b0b0f"
 TEXT = "#1d1d24"
 MUTED = "#6b6b76"
 BG = "#efede6"
+LOGO_CID = "setvion-logo"
 FONT = "'Helvetica Neue',Helvetica,Arial,sans-serif"
 
 
@@ -25,13 +26,11 @@ def _multiline(value):
 
 
 def _shell(preheader, eyebrow, title, body_html, site_url, contact_email):
-    logo = (
-        f'<img src="{_e(site_url)}/logo-bridge.png" width="64" alt="" style="display:block;margin:0 auto 14px;border:0">'
-        if site_url else ""
-    )
+    logo = (f'<img src="cid:{LOGO_CID}" width="130" alt="SETVION AI Solutions logo" '
+            'style="display:block;margin:0 auto 18px;border:0;outline:none;height:auto;">')
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light"><title>{_e(title)}</title></head>
+<meta name="color-scheme" content="light"><title>SETVION AI Solutions</title></head>
 <body style="margin:0;padding:0;background:{BG};">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">{_e(preheader)}&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{BG};padding:32px 12px;">
@@ -39,8 +38,8 @@ def _shell(preheader, eyebrow, title, body_html, site_url, contact_email):
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
     <tr><td style="background:{INK};border-radius:20px 20px 0 0;padding:40px 36px 34px;text-align:center;">
       {logo}
-      <div style="font-family:{FONT};font-size:15px;font-weight:700;letter-spacing:6px;color:{GOLD_LIGHT};">SETVION</div>
-      <div style="font-family:{FONT};font-size:10px;letter-spacing:3px;color:#8d8c96;margin-top:6px;">AI SOLUTIONS</div>
+      <div style="font-family:{FONT};font-size:22px;font-weight:700;letter-spacing:7px;color:{GOLD_LIGHT};">SETVION</div>
+      <div style="font-family:{FONT};font-size:13px;letter-spacing:4px;color:#b9b8c2;margin-top:6px;">AI Solutions</div>
       <div style="height:1px;width:48px;background:{GOLD};margin:26px auto 22px;line-height:1px;font-size:1px;">&nbsp;</div>
       <div style="font-family:{FONT};font-size:11px;letter-spacing:3px;color:{GOLD};text-transform:uppercase;">{_e(eyebrow)}</div>
       <h1 style="font-family:{FONT};font-size:28px;line-height:1.25;font-weight:700;color:#ffffff;margin:12px 0 0;">{title}</h1>
@@ -49,7 +48,7 @@ def _shell(preheader, eyebrow, title, body_html, site_url, contact_email):
       {body_html}
     </td></tr>
     <tr><td style="background:#faf8f3;border-top:1px solid #e9e5d8;border-radius:0 0 20px 20px;padding:24px 36px;text-align:center;font-family:{FONT};font-size:12px;line-height:1.7;color:{MUTED};">
-      <strong style="color:{TEXT};letter-spacing:2px;">SETVION AI SOLUTIONS</strong><br>
+      <strong style="color:{TEXT};letter-spacing:1px;">SETVION AI Solutions</strong><br>
       Building bridges with modern technology<br>
       <a href="mailto:{_e(contact_email)}" style="color:{GOLD};text-decoration:none;">{_e(contact_email)}</a>
     </td></tr>
@@ -77,7 +76,7 @@ def _button(label, href):
 
 
 def team_email(name, email, message, site_url, contact_email):
-    """Notification to the Setvion team."""
+    """Notification to the SETVION AI Solutions team."""
     when = datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
     subject = f"New enquiry from {name}"
     rows = "".join(
@@ -105,7 +104,7 @@ def team_email(name, email, message, site_url, contact_email):
 def visitor_email(name, message, site_url, contact_email):
     """Confirmation to the person who contacted Setvion."""
     first = name.split(" ")[0] or "there"
-    subject = "Thanks for contacting Setvion AI Solutions"
+    subject = "Thanks for contacting SETVION AI Solutions"
     steps = [
         ("We read it", "Your message goes straight to the people who will work on it."),
         ("We reply within one working day", "With answers, or the questions we need to give you a proper one."),
@@ -127,15 +126,15 @@ def visitor_email(name, message, site_url, contact_email):
         + f'<p style="margin:28px 0 6px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:{MUTED};">What happens next</p>'
         f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0">{step_rows}</table>'
         + (f'<div style="margin-top:26px;">{_button("Visit our website", site_url)}</div>' if site_url else "")
-        + f'<p style="margin:28px 0 0;">Speak soon,<br><strong>The Setvion team</strong></p>'
+        + f'<p style="margin:28px 0 0;">Speak soon,<br><strong>The SETVION AI Solutions team</strong></p>'
         f'<p style="margin:18px 0 0;font-size:13px;color:{MUTED};">Need to add something? Just reply to this email.</p>'
     )
     text = (
-        f"Hi {first},\n\nThank you for getting in touch with Setvion AI Solutions. We have received your message "
+        f"Hi {first},\n\nThank you for getting in touch with SETVION AI Solutions. We have received your message "
         f"and will reply within one working day.\n\nYour message:\n{message}\n\n"
         "What happens next:\n1. We read it\n2. We reply within one working day\n"
         "3. If we are a good fit, we agree a clear scope, timeline and fixed price in writing\n\n"
-        f"Speak soon,\nThe Setvion team\n{contact_email}\n"
+        f"Speak soon,\nThe SETVION AI Solutions team\n{contact_email}\n"
     )
     page = _shell("We have your message and will reply within one working day.", "Message received",
                   f"Thank you, {_e(first)}.", body, site_url, contact_email)

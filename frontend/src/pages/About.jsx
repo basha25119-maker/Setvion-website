@@ -9,7 +9,7 @@ import { COMPANY, MOTTO, STATS, MISSION, VALUES, PROMISES } from "../content.js"
 
 export default function About() {
   usePageMeta(
-    "About | Setvion AI Solutions",
+    "About | SETVION AI Solutions",
     "Why Setvion exists, our mission and the values we work by: clarity, honesty, ownership, craft, accountability and long-term partnership."
   );
 

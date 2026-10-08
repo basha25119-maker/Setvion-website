@@ -6,7 +6,7 @@ import { SERVICES, PROCESS, FAQ, PRODUCT } from "../content.js";
 
 export default function Services() {
   usePageMeta(
-    "Services & Process | Setvion AI Solutions",
+    "Services & Process | SETVION AI Solutions",
     "AI and automation, websites and apps, data and reporting, cloud and integration, and the clear four-stage process we follow on every project."
   );
 

@@ -107,7 +107,7 @@ function Hero() {
 export default function Home() {
   usePageMeta(
     `${COMPANY.name} | ${COMPANY.tagline}`,
-    "Setvion AI Solutions helps growing businesses adopt AI, automation and modern software, built around how you actually work."
+    "SETVION AI Solutions helps growing businesses adopt AI, automation and modern software, built around how you actually work."
   );
 
   return (

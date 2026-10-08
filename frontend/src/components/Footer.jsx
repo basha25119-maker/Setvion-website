@@ -7,8 +7,8 @@ export default function Footer() {
       <div className="wrap footer-grid">
         <div>
           <Link to="/" className="brand">
-            <img src="/logo-bridge.png" alt="" width="44" height="18" />
-            <span>SETVION</span>
+            <img src="/logo-bridge.png" alt="" width="52" height="21" />
+            <span className="brand-name">SETVION<small>AI Solutions</small></span>
           </Link>
           <p className="footer-tag">{COMPANY.tagline}.</p>
         </div>
